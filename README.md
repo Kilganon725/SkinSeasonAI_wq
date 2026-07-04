@@ -45,16 +45,19 @@ database/     SQLite database
 train/        Standalone training scripts
 reports/      Exported PDF and Excel reports
 docs/         Architecture, API, deployment documentation
-datasets/     Original skin disease image datasets
+datasets/     Local-only original skin disease image datasets, not committed
 ```
 
-## Notes
+## Dataset Notes
 
-The current workspace contains image datasets rather than incidence CSV files. On first startup, the application scans `datasets/SkinDisease`, maps disease folders into the project disease categories, and creates a reproducible monthly seasonal incidence dataset for demonstration and analysis. You can still upload real CSV, Excel, or SQLite incidence data later from the Dataset Management page.
+The original image dataset is intentionally not uploaded to GitHub because it is large and should remain a local dataset asset. Put it under `datasets/SkinDisease` when running the project locally.
+
+On first startup, the application scans `datasets/SkinDisease` when that folder exists, maps disease folders into the project disease categories, and creates a reproducible monthly seasonal incidence dataset for demonstration and analysis. If the folder is absent, the application still starts and generates a built-in fallback dataset so the web system, charts, exports, and machine learning pages remain usable.
+
+You can still upload real CSV, Excel, or SQLite incidence data later from the Dataset Management page.
 
 ## Documentation
 
 - `docs/ARCHITECTURE.md`
 - `docs/API.md`
 - `docs/DEPLOYMENT.md`
-

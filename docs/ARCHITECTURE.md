@@ -28,5 +28,4 @@ SkinSeasonAI uses a layered Flask architecture.
 
 ## Default Data
 
-When no records exist, `SeedService` reads the existing image dataset under `datasets/SkinDisease`, maps available classes into the required disease categories, and creates a reproducible monthly seasonal incidence dataset.
-
+When no records exist, `SeedService` reads the local image dataset under `datasets/SkinDisease` if present, maps available classes into the required disease categories, and creates a reproducible monthly seasonal incidence dataset. The `datasets/` directory is intentionally ignored by Git because the dataset is large. If no local dataset is present, `SeedService` creates fallback demonstration records so the system remains runnable after cloning.

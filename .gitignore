@@ -3,6 +3,7 @@
 __pycache__/
 *.py[cod]
 .DS_Store
+datasets/
 database/*.sqlite3
 data/raw/*
 data/processed/*
