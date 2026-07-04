@@ -1,4 +1,5 @@
 import json
+from datetime import datetime
 from pathlib import Path
 
 import pandas as pd
@@ -16,11 +17,12 @@ from flask_login import current_user, login_required, login_user, logout_user
 from werkzeug.utils import secure_filename
 
 from app import db
-from app.models import DiseaseRecord, PredictionHistory, User
+from app.models import DiseaseRecord, ImageDiagnosisHistory, PredictionHistory, User
 from services.analysis_service import AnalysisService
 from services.data_cleaner import DataCleaner
 from services.data_importer import DataImporter
 from services.export_service import ExportService
+from services.image_classifier_service import ImageClassifierService
 from services.ml_service import MachineLearningService
 from services.seed_service import SeedService
 from services.visualization_service import VisualizationService
@@ -28,6 +30,7 @@ from utils.constants import DISEASE_CATEGORIES, SEASONS
 
 
 main_bp = Blueprint("main", __name__)
+IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png", ".bmp", ".webp"}
 
 
 def records_frame():
@@ -139,6 +142,72 @@ def disease_analysis():
     )
 
 
+@main_bp.route("/image-diagnosis", methods=["GET", "POST"])
+@login_required
+def image_diagnosis():
+    service = ImageClassifierService()
+    result = None
+    uploaded_url = None
+
+    if request.method == "POST":
+        action = request.form.get("action", "predict")
+        if action == "train":
+            try:
+                max_per_class = int(request.form.get("max_per_class", 80))
+                metrics = service.train(max_per_class=max(5, min(max_per_class, 300)))
+                flash(
+                    f"视觉模型训练完成：{metrics['class_count']} 类，{metrics['sample_count']} 张，"
+                    f"accuracy={metrics['accuracy']}，macro_f1={metrics['macro_f1']}。",
+                    "success",
+                )
+            except Exception as exc:
+                flash(f"视觉模型训练失败：{exc}", "danger")
+            return redirect(url_for("main.image_diagnosis"))
+
+        file = request.files.get("image")
+        if not file or not file.filename:
+            flash("请选择要识别的皮肤图片。", "warning")
+            return redirect(url_for("main.image_diagnosis"))
+
+        suffix = Path(file.filename).suffix.lower()
+        if suffix not in IMAGE_EXTENSIONS:
+            flash("仅支持 JPG、PNG、BMP、WEBP 图片。", "warning")
+            return redirect(url_for("main.image_diagnosis"))
+
+        upload_dir = Path(current_app.config["IMAGE_UPLOAD_FOLDER"])
+        upload_dir.mkdir(parents=True, exist_ok=True)
+        filename = f"{datetime.utcnow().strftime('%Y%m%d%H%M%S%f')}_{secure_filename(file.filename)}"
+        image_path = upload_dir / filename
+        file.save(image_path)
+        uploaded_url = url_for("static", filename=f"uploads/diagnosis/{filename}")
+
+        try:
+            if not service.model_exists() and service.dataset_available():
+                flash("首次使用图像识别，正在基于本地数据集训练轻量视觉模型。", "info")
+                service.train(max_per_class=60)
+            result = service.predict(image_path)
+            history = ImageDiagnosisHistory(
+                image_path=f"uploads/diagnosis/{filename}",
+                predicted_label=result["label"],
+                confidence=result["confidence"],
+                top_predictions_json=ImageClassifierService.dumps_top_predictions(result["top_predictions"]),
+                model_name=result["model_name"],
+            )
+            db.session.add(history)
+            db.session.commit()
+        except Exception as exc:
+            flash(f"图像识别失败：{exc}", "danger")
+
+    histories = ImageDiagnosisHistory.query.order_by(ImageDiagnosisHistory.created_at.desc()).limit(12).all()
+    return render_template(
+        "image_diagnosis.html",
+        status=service.status(),
+        result=result,
+        uploaded_url=uploaded_url,
+        histories=histories,
+    )
+
+
 @main_bp.route("/prediction", methods=["GET", "POST"])
 @login_required
 def prediction():
@@ -209,4 +278,3 @@ def api_records():
 @login_required
 def api_charts():
     return VisualizationService(records_frame()).all_charts()
-

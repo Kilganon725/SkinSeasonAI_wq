@@ -30,6 +30,7 @@ def test_core_pages_and_exports(tmp_path):
         "/weather",
         "/season",
         "/disease",
+        "/image-diagnosis",
         "/prediction",
         "/dashboard",
         "/about",
@@ -40,4 +41,3 @@ def test_core_pages_and_exports(tmp_path):
     ]:
         response = client.get(path)
         assert response.status_code == 200
-

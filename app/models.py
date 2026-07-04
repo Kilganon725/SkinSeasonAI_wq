@@ -64,3 +64,12 @@ class PredictionHistory(db.Model):
     risk_level = db.Column(db.String(20), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
+
+class ImageDiagnosisHistory(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    image_path = db.Column(db.String(255), nullable=False)
+    predicted_label = db.Column(db.String(120), nullable=False)
+    confidence = db.Column(db.Float, nullable=False)
+    top_predictions_json = db.Column(db.Text, nullable=False)
+    model_name = db.Column(db.String(120), nullable=False, default="Skin Image RandomForest")
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)

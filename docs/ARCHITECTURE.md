@@ -25,7 +25,12 @@ SkinSeasonAI uses a layered Flask architecture.
 6. `VisualizationService` produces Plotly JSON for the UI.
 7. `MachineLearningService` trains regression models and stores predictions in `PredictionHistory`.
 8. `ExportService` exports Excel and PDF reports.
+9. `ImageClassifierService` trains a local image classifier from `datasets/SkinDisease/train`, predicts uploaded skin images, and stores results in `ImageDiagnosisHistory`.
 
 ## Default Data
 
 When no records exist, `SeedService` reads the local image dataset under `datasets/SkinDisease` if present, maps available classes into the required disease categories, and creates a reproducible monthly seasonal incidence dataset. The `datasets/` directory is intentionally ignored by Git because the dataset is large. If no local dataset is present, `SeedService` creates fallback demonstration records so the system remains runnable after cloning.
+
+## Image Recognition Model
+
+The image recognition module deliberately uses a lightweight scikit-learn model so the project remains easy to install and demonstrate. It resizes each image, extracts RGB histograms, grayscale texture features, and gradient statistics, then trains a Random Forest classifier. The trained `.joblib` artifact is generated locally and ignored by Git.

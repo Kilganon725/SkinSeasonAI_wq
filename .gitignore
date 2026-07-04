@@ -7,6 +7,8 @@ datasets/
 database/*.sqlite3
 data/raw/*
 data/processed/*
+models/*.joblib
+static/uploads/
 reports/*
 !data/raw/.gitkeep
 !data/processed/.gitkeep

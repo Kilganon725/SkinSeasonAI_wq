@@ -7,6 +7,7 @@ scikit-learn>=1.6
 plotly>=5.23
 openpyxl>=3.1
 reportlab>=4.2
+Pillow>=10.0
 gunicorn>=22.0
 pytest>=8.0
 

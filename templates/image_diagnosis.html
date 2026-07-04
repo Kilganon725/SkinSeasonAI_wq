@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-head">
+    <div>
+        <h1>皮肤病图像辅助识别</h1>
+        <p>上传皮肤图片，基于本地图片数据集训练的视觉模型输出可能类别和置信度。</p>
+    </div>
+    <span class="badge text-bg-{{ 'success' if status.model_exists else 'secondary' }} fs-6">
+        {{ "模型已训练" if status.model_exists else "模型未训练" }}
+    </span>
+</div>
+
+<div class="alert alert-warning border-0">
+    本模块仅用于机器学习辅助识别和毕业设计展示，不作为临床诊断依据；疑似严重皮损请及时咨询专业医生。
+</div>
+
+<div class="row g-3">
+    <div class="col-xl-4">
+        <div class="panel">
+            <div class="panel-title">上传识别</div>
+            <form method="post" enctype="multipart/form-data">
+                <input type="hidden" name="action" value="predict">
+                <div class="mb-3">
+                    <label class="form-label">皮肤图片</label>
+                    <input class="form-control" type="file" name="image" accept=".jpg,.jpeg,.png,.bmp,.webp" required>
+                </div>
+                <button class="btn btn-primary w-100" type="submit">
+                    <i class="bi bi-image"></i> 上传并识别
+                </button>
+            </form>
+        </div>
+
+        <div class="panel mt-3">
+            <div class="panel-title">训练视觉模型</div>
+            <div class="model-status">
+                <div><span>本地数据集</span><strong>{{ "可用" if status.dataset_available else "未找到" }}</strong></div>
+                <div><span>类别数量</span><strong>{{ status.label_count }}</strong></div>
+                <div><span>训练样本</span><strong>{{ status.metrics.sample_count or 0 }}</strong></div>
+                <div><span>准确率</span><strong>{{ status.metrics.accuracy or "-" }}</strong></div>
+            </div>
+            <form method="post" class="mt-3">
+                <input type="hidden" name="action" value="train">
+                <label class="form-label">每类最多训练图片数</label>
+                <input class="form-control" name="max_per_class" type="number" min="5" max="300" value="80">
+                <button class="btn btn-outline-primary w-100 mt-3" type="submit">
+                    <i class="bi bi-cpu"></i> 训练/更新模型
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div class="col-xl-8">
+        <div class="panel">
+            <div class="panel-title">识别结果</div>
+            {% if result %}
+            <div class="diagnosis-result">
+                <div>
+                    {% if uploaded_url %}
+                    <img class="diagnosis-image" src="{{ uploaded_url }}" alt="上传图片">
+                    {% endif %}
+                </div>
+                <div>
+                    <div class="diagnosis-label">
+                        <span>预测类别</span>
+                        <strong>{{ result.label }}</strong>
+                        <em class="badge text-bg-{{ 'danger' if result.high_risk else 'primary' }}">
+                            {{ "需谨慎关注" if result.high_risk else "辅助判断" }}
+                        </em>
+                    </div>
+                    <p class="text-secondary mt-2">{{ result.description }}</p>
+                    <div class="mt-3">
+                        {% for item in result.top_predictions %}
+                        <div class="prediction-bar-row">
+                            <div class="d-flex justify-content-between">
+                                <span>{{ item.label }}</span>
+                                <strong>{{ "%.2f"|format(item.percent) }}%</strong>
+                            </div>
+                            <div class="progress" role="progressbar" aria-label="{{ item.label }}">
+                                <div class="progress-bar" style="width: {{ item.percent }}%"></div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <div class="empty-state">
+                <i class="bi bi-card-image"></i>
+                <p>上传一张图片后，这里会显示预测类别、置信度和 Top 3 可能结果。</p>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="panel mt-3">
+            <div class="panel-title">识别历史</div>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead><tr><th>时间</th><th>图片</th><th>预测类别</th><th>置信度</th><th>模型</th></tr></thead>
+                    <tbody>
+                    {% for item in histories %}
+                    <tr>
+                        <td>{{ item.created_at.strftime("%Y-%m-%d %H:%M") }}</td>
+                        <td><img class="history-thumb" src="{{ url_for('static', filename=item.image_path) }}" alt="history"></td>
+                        <td>{{ item.predicted_label }}</td>
+                        <td>{{ "%.2f"|format(item.confidence * 100) }}%</td>
+                        <td>{{ item.model_name }}</td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="5" class="text-secondary">暂无识别历史</td></tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -15,5 +15,6 @@ class Config:
     PROCESSED_FOLDER = BASE_DIR / "data" / "processed"
     REPORT_FOLDER = BASE_DIR / "reports"
     DATASET_IMAGE_ROOT = BASE_DIR / "datasets" / "SkinDisease"
+    IMAGE_MODEL_PATH = BASE_DIR / "models" / "skin_disease_image_classifier.joblib"
+    IMAGE_UPLOAD_FOLDER = BASE_DIR / "static" / "uploads" / "diagnosis"
     MAX_CONTENT_LENGTH = 64 * 1024 * 1024
-

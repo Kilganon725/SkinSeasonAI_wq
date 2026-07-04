@@ -52,7 +52,7 @@ Keys:
 - `/season`: seasonal analysis.
 - `/disease`: disease category analysis.
 - `/prediction`: model comparison and prediction.
+- `/image-diagnosis`: train local image model and classify uploaded skin images.
 - `/dashboard`: interactive visualization dashboard.
 - `/export/excel`: export Excel report.
 - `/export/pdf`: export PDF report.
-

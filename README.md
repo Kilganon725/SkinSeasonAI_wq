@@ -12,6 +12,7 @@
 - Plotly line, bar, pie, heatmap, scatter, box, radar, and dashboard charts.
 - Linear Regression, Decision Tree, Random Forest, and optional XGBoost models.
 - MAE, RMSE, R², model comparison, feature importance, and prediction history.
+- Skin disease image assisted recognition based on local image datasets.
 - PDF and Excel report export.
 - Bootstrap 5 responsive UI with dark mode.
 
@@ -55,6 +56,18 @@ The original image dataset is intentionally not uploaded to GitHub because it is
 On first startup, the application scans `datasets/SkinDisease` when that folder exists, maps disease folders into the project disease categories, and creates a reproducible monthly seasonal incidence dataset for demonstration and analysis. If the folder is absent, the application still starts and generates a built-in fallback dataset so the web system, charts, exports, and machine learning pages remain usable.
 
 You can still upload real CSV, Excel, or SQLite incidence data later from the Dataset Management page.
+
+## Image Recognition
+
+The Image Diagnosis page can train a lightweight visual classifier from `datasets/SkinDisease/train`. It extracts color, texture, and gradient features from images and trains a Random Forest model saved locally as `models/skin_disease_image_classifier.joblib`.
+
+Train from the command line:
+
+```bash
+python train/train_image_classifier.py --max-per-class 80
+```
+
+The module is intended for machine learning assisted recognition and graduation project demonstration only. It is not a clinical diagnosis tool.
 
 ## Documentation
 
