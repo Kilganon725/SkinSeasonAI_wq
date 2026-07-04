@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-head"><div><h1>关于项目</h1><p>毕业设计：基于 Python 的季节变化与皮肤病发病规律分析及可视化预测系统设计与实现。</p></div></div>
+<div class="row g-3">
+    <div class="col-lg-6">
+        <div class="panel">
+            <div class="panel-title">系统功能</div>
+            <ul class="feature-list">
+                <li>CSV、Excel、SQLite 数据导入与字段自动映射</li>
+                <li>缺失值处理、重复值清理、异常值截断、归一化特征</li>
+                <li>月度趋势、季节对比、疾病结构、气象相关性分析</li>
+                <li>线性回归、决策树、随机森林、可选 XGBoost 预测</li>
+                <li>登录认证、预测历史、模型对比、PDF/Excel 报告导出</li>
+            </ul>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="panel">
+            <div class="panel-title">技术栈</div>
+            <div class="tech-stack">
+                <span>Python</span><span>Flask</span><span>SQLite</span><span>Pandas</span><span>Scikit-learn</span><span>Plotly</span><span>Bootstrap 5</span>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

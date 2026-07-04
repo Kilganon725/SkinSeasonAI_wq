@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-head">
+    <div>
+        <h1>系统首页</h1>
+        <p>基于季节、气象与皮肤病发病数据的分析预测平台</p>
+    </div>
+    <a class="btn btn-primary" href="{{ url_for('main.prediction') }}"><i class="bi bi-cpu"></i> 开始预测</a>
+</div>
+
+<div class="metric-grid">
+    <div class="metric"><span>总记录数</span><strong>{{ summary.rows or 0 }}</strong></div>
+    <div class="metric"><span>疾病类别</span><strong>{{ summary.disease_count or 0 }}</strong></div>
+    <div class="metric"><span>总发病量</span><strong>{{ "%.0f"|format(summary.total_incidence or 0) }}</strong></div>
+    <div class="metric"><span>平均发病量</span><strong>{{ "%.2f"|format(summary.avg_incidence or 0) }}</strong></div>
+</div>
+
+<div class="row g-3 mt-1">
+    <div class="col-xl-8">
+        <div class="panel">
+            <div class="panel-title">月度发病趋势</div>
+            <div id="home-line" class="chart"></div>
+        </div>
+    </div>
+    <div class="col-xl-4">
+        <div class="panel">
+            <div class="panel-title">疾病类别占比</div>
+            <div id="home-pie" class="chart"></div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3 mt-1">
+    <div class="col-xl-7">
+        <div class="panel">
+            <div class="panel-title">最近数据</div>
+            {% include "_table.html" %}
+        </div>
+    </div>
+    <div class="col-xl-5">
+        <div class="panel">
+            <div class="panel-title">预测历史</div>
+            <div class="table-responsive">
+                <table class="table align-middle">
+                    <thead><tr><th>模型</th><th>疾病</th><th>预测值</th><th>风险</th></tr></thead>
+                    <tbody>
+                    {% for item in predictions %}
+                    <tr><td>{{ item.model_name }}</td><td>{{ item.disease }}</td><td>{{ "%.2f"|format(item.predicted_incidence) }}</td><td><span class="badge risk-{{ item.risk_level|lower }}">{{ item.risk_level }}</span></td></tr>
+                    {% else %}
+                    <tr><td colspan="4" class="text-secondary">暂无预测记录</td></tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+renderChart("home-line", {{ charts.line|safe }});
+renderChart("home-pie", {{ charts.pie|safe }});
+</script>
+{% endblock %}
+

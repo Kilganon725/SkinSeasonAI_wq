@@ -1,0 +1,14 @@
+Flask>=3.0
+Flask-SQLAlchemy>=3.1
+Flask-Login>=0.6
+pandas>=2.3
+numpy>=2.0
+scikit-learn>=1.6
+plotly>=5.23
+openpyxl>=3.1
+reportlab>=4.2
+gunicorn>=22.0
+pytest>=8.0
+
+# Optional: install manually if your Python version has a compatible wheel.
+# xgboost>=2.1

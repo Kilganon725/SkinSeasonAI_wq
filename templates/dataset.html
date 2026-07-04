@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-head">
+    <div>
+        <h1>数据集管理</h1>
+        <p>支持 CSV、Excel、SQLite 文件导入，自动识别日期、病种、发病量与气象字段。</p>
+    </div>
+    <span class="badge text-bg-primary fs-6">当前 {{ total_records }} 条记录</span>
+</div>
+
+<div class="row g-3">
+    <div class="col-lg-4">
+        <div class="panel">
+            <div class="panel-title">导入数据</div>
+            <form method="post" enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label class="form-label">数据文件</label>
+                    <input class="form-control" type="file" name="dataset" accept=".csv,.xls,.xlsx,.db,.sqlite,.sqlite3" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">SQLite 表名</label>
+                    <input class="form-control" name="sqlite_table" placeholder="留空则读取第一个表">
+                </div>
+                <div class="form-check form-switch mb-3">
+                    <input class="form-check-input" type="checkbox" name="normalize" id="normalize">
+                    <label class="form-check-label" for="normalize">生成归一化特征</label>
+                </div>
+                <button class="btn btn-primary w-100" type="submit"><i class="bi bi-upload"></i> 上传并清洗</button>
+            </form>
+        </div>
+        {% if import_report %}
+        <div class="panel mt-3">
+            <div class="panel-title">清洗报告</div>
+            <pre class="report-json">{{ import_report }}</pre>
+        </div>
+        {% endif %}
+    </div>
+    <div class="col-lg-8">
+        <div class="panel">
+            <div class="panel-title">最近 50 条记录</div>
+            {% include "_table.html" %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+

@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-head"><div><h1>疾病类别分析</h1><p>围绕湿疹、皮炎、银屑病、痤疮、真菌感染和过敏性皮肤病等类别进行发病结构分析。</p></div></div>
+<div class="row g-3">
+    <div class="col-xl-5"><div class="panel"><div class="panel-title">疾病占比</div><div id="pie" class="chart"></div></div></div>
+    <div class="col-xl-7">
+        <div class="panel">
+            <div class="panel-title">类别统计</div>
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead><tr><th>疾病类别</th><th>发病量</th></tr></thead>
+                    <tbody>
+                    {% for _, row in distribution.iterrows() %}
+                    <tr><td>{{ row.disease }}</td><td>{{ "%.0f"|format(row.incidence) }}</td></tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-12"><div class="panel"><div class="panel-title">月度趋势</div><div id="line" class="chart"></div></div></div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+renderChart("pie", {{ charts.pie|safe }});
+renderChart("line", {{ charts.line|safe }});
+</script>
+{% endblock %}
+

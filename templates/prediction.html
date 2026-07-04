@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-head"><div><h1>机器学习预测</h1><p>内置线性回归、决策树、随机森林，并在环境可用时启用 XGBoost。</p></div></div>
+<div class="row g-3">
+    <div class="col-xl-4">
+        <div class="panel">
+            <div class="panel-title">输入预测条件</div>
+            <form method="post" class="predict-form">
+                <label class="form-label">模型</label>
+                <select class="form-select" name="model_name">
+                    {% for item in comparison.results %}
+                    <option>{{ item.name }}</option>
+                    {% endfor %}
+                </select>
+                <label class="form-label">疾病类别</label>
+                <select class="form-select" name="disease">
+                    {% for item in disease_categories %}<option>{{ item }}</option>{% endfor %}
+                </select>
+                <label class="form-label">月份</label>
+                <input class="form-range" name="month" type="range" min="1" max="12" value="7" oninput="monthValue.textContent=this.value">
+                <div class="range-value">当前月份：<span id="monthValue">7</span></div>
+                <div class="row g-2">
+                    <div class="col-6"><label class="form-label">温度</label><input class="form-control" name="temperature" value="28"></div>
+                    <div class="col-6"><label class="form-label">湿度</label><input class="form-control" name="humidity" value="72"></div>
+                    <div class="col-6"><label class="form-label">降雨量</label><input class="form-control" name="rainfall" value="90"></div>
+                    <div class="col-6"><label class="form-label">PM2.5</label><input class="form-control" name="pm25" value="35"></div>
+                    <div class="col-6"><label class="form-label">UV 指数</label><input class="form-control" name="uv_index" value="8"></div>
+                    <div class="col-6"><label class="form-label">风速</label><input class="form-control" name="wind_speed" value="2.1"></div>
+                </div>
+                <button class="btn btn-primary w-100 mt-3" type="submit"><i class="bi bi-magic"></i> 预测发病风险</button>
+            </form>
+            {% if result %}
+            <div class="prediction-result mt-3">
+                <span>预测发病量</span>
+                <strong>{{ result.prediction }}</strong>
+                <em class="badge risk-{{ result.risk_level|lower }}">{{ result.risk_level }}</em>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    <div class="col-xl-8">
+        <div class="panel">
+            <div class="panel-title">模型对比</div>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead><tr><th>模型</th><th>MAE</th><th>RMSE</th><th>R²</th><th>主要特征</th></tr></thead>
+                    <tbody>
+                    {% for item in comparison.results %}
+                    <tr>
+                        <td>{{ item.name }} {% if item.name == comparison.best_model %}<span class="badge text-bg-success">Best</span>{% endif %}</td>
+                        <td>{{ item.mae }}</td><td>{{ item.rmse }}</td><td>{{ item.r2 }}</td>
+                        <td>
+                            {% for feature in item.feature_importance[:3] %}
+                            <span class="badge text-bg-light">{{ feature.feature }} {{ feature.importance }}</span>
+                            {% endfor %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="panel mt-3">
+            <div class="panel-title">预测历史</div>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead><tr><th>时间</th><th>模型</th><th>疾病</th><th>预测</th><th>风险</th></tr></thead>
+                    <tbody>
+                    {% for item in histories %}
+                    <tr><td>{{ item.created_at.strftime("%Y-%m-%d %H:%M") }}</td><td>{{ item.model_name }}</td><td>{{ item.disease }}</td><td>{{ "%.2f"|format(item.predicted_incidence) }}</td><td><span class="badge risk-{{ item.risk_level|lower }}">{{ item.risk_level }}</span></td></tr>
+                    {% else %}
+                    <tr><td colspan="5" class="text-secondary">暂无预测历史</td></tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

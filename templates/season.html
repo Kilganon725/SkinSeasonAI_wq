@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-head"><div><h1>季节发病规律</h1><p>对比春、夏、秋、冬不同季节下的总体发病水平和疾病结构。</p></div></div>
+<div class="row g-3">
+    <div class="col-xl-6"><div class="panel"><div class="panel-title">季节发病柱状图</div><div id="bar" class="chart"></div></div></div>
+    <div class="col-xl-6"><div class="panel"><div class="panel-title">季节箱线图</div><div id="box" class="chart"></div></div></div>
+    <div class="col-12"><div class="panel"><div class="panel-title">疾病-季节热力图</div><div id="season-disease" class="chart tall"></div></div></div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+renderChart("bar", {{ charts.bar|safe }});
+renderChart("box", {{ charts.box|safe }});
+renderChart("season-disease", {{ charts.season_disease|safe }});
+</script>
+{% endblock %}
+

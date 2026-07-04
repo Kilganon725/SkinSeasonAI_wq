@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-head"><div><h1>可视化 Dashboard</h1><p>Plotly 交互式图表集中展示整体趋势、季节差异、疾病结构与相关性。</p></div></div>
+<div class="dashboard-grid">
+    <div class="panel"><div class="panel-title">月度趋势</div><div id="line" class="chart"></div></div>
+    <div class="panel"><div class="panel-title">季节对比</div><div id="bar" class="chart"></div></div>
+    <div class="panel"><div class="panel-title">疾病占比</div><div id="pie" class="chart"></div></div>
+    <div class="panel"><div class="panel-title">相关性热力图</div><div id="heatmap" class="chart"></div></div>
+    <div class="panel wide"><div class="panel-title">疾病-季节热力图</div><div id="season-disease" class="chart"></div></div>
+    <div class="panel"><div class="panel-title">箱线图</div><div id="box" class="chart"></div></div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+renderChart("line", {{ charts.line|safe }});
+renderChart("bar", {{ charts.bar|safe }});
+renderChart("pie", {{ charts.pie|safe }});
+renderChart("heatmap", {{ charts.heatmap|safe }});
+renderChart("season-disease", {{ charts.season_disease|safe }});
+renderChart("box", {{ charts.box|safe }});
+</script>
+{% endblock %}
+

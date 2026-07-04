@@ -1,0 +1,26 @@
+<div class="table-responsive">
+    <table class="table table-hover align-middle compact-table">
+        <thead>
+        <tr>
+            <th>日期</th><th>季节</th><th>疾病</th><th>发病量</th><th>温度</th><th>湿度</th><th>PM2.5</th><th>UV</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for _, row in records.iterrows() %}
+        <tr>
+            <td>{{ row.date }}</td>
+            <td>{{ row.season }}</td>
+            <td>{{ row.disease }}</td>
+            <td>{{ "%.0f"|format(row.incidence) }}</td>
+            <td>{{ "%.1f"|format(row.temperature) }}</td>
+            <td>{{ "%.1f"|format(row.humidity) }}</td>
+            <td>{{ "%.1f"|format(row.pm25) }}</td>
+            <td>{{ "%.1f"|format(row.uv_index) }}</td>
+        </tr>
+        {% else %}
+        <tr><td colspan="8" class="text-secondary">暂无数据</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+

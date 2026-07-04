@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-head"><div><h1>气象因素分析</h1><p>分析温度、湿度、降雨、PM2.5、紫外线、风速与皮肤病发病之间的关系。</p></div></div>
+<div class="row g-3">
+    <div class="col-xl-7"><div class="panel"><div class="panel-title">相关性热力图</div><div id="corr" class="chart tall"></div></div></div>
+    <div class="col-xl-5"><div class="panel"><div class="panel-title">气象散点图</div><div id="scatter" class="chart tall"></div></div></div>
+    <div class="col-xl-6"><div class="panel"><div class="panel-title">季节气象雷达图</div><div id="radar" class="chart"></div></div></div>
+    <div class="col-xl-6"><div class="panel"><div class="panel-title">季节均值统计</div>{{ stats.to_html(classes="table table-hover align-middle", border=0)|safe }}</div></div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+renderChart("corr", {{ charts.heatmap|safe }});
+renderChart("scatter", {{ charts.scatter|safe }});
+renderChart("radar", {{ charts.radar|safe }});
+</script>
+{% endblock %}
+
