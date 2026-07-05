@@ -59,12 +59,46 @@ def login():
     if current_user.is_authenticated:
         return redirect(url_for("main.home"))
     if request.method == "POST":
-        user = User.query.filter_by(username=request.form.get("username", "")).first()
+        user = User.query.filter_by(username=request.form.get("username", "").strip()).first()
         if user and user.check_password(request.form.get("password", "")):
             login_user(user)
+            flash("欢迎回来，登录成功。", "success")
             return redirect(url_for("main.home"))
         flash("用户名或密码错误。", "danger")
-    return render_template("login.html")
+    return render_template("login.html", auth_mode="login")
+
+
+@main_bp.route("/register", methods=["GET", "POST"])
+def register():
+    if current_user.is_authenticated:
+        return redirect(url_for("main.home"))
+    if request.method == "POST":
+        username = request.form.get("username", "").strip()
+        password = request.form.get("password", "")
+        confirm_password = request.form.get("confirm_password", "")
+
+        if len(username) < 3 or len(username) > 32:
+            flash("用户名长度需在 3 到 32 个字符之间。", "warning")
+            return render_template("login.html", auth_mode="register")
+        if len(password) < 6:
+            flash("密码至少需要 6 位字符。", "warning")
+            return render_template("login.html", auth_mode="register")
+        if password != confirm_password:
+            flash("两次输入的密码不一致。", "warning")
+            return render_template("login.html", auth_mode="register")
+        if User.query.filter_by(username=username).first():
+            flash("该用户名已被占用，请更换后重试。", "warning")
+            return render_template("login.html", auth_mode="register")
+
+        user = User(username=username)
+        user.set_password(password)
+        db.session.add(user)
+        db.session.commit()
+        login_user(user)
+        flash("注册成功，已自动登录。", "success")
+        return redirect(url_for("main.home"))
+
+    return render_template("login.html", auth_mode="register")
 
 
 @main_bp.route("/logout")
