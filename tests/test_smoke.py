@@ -10,6 +10,40 @@ def login(client):
     )
 
 
+def test_register_and_login_flow(tmp_path):
+    app = create_app()
+    app.config.update(
+        TESTING=True,
+        SQLALCHEMY_DATABASE_URI=f"sqlite:///{tmp_path / 'register.sqlite3'}",
+        WTF_CSRF_ENABLED=False,
+    )
+    with app.app_context():
+        db.create_all()
+        SeedService().ensure_default_data()
+
+    client = app.test_client()
+    response = client.post(
+        "/register",
+        data={
+            "username": "researcher",
+            "password": "secret123",
+            "confirm_password": "secret123",
+        },
+        follow_redirects=True,
+    )
+    assert response.status_code == 200
+
+    logout = client.get("/logout", follow_redirects=True)
+    assert logout.status_code == 200
+
+    login_response = client.post(
+        "/login",
+        data={"username": "researcher", "password": "secret123"},
+        follow_redirects=True,
+    )
+    assert login_response.status_code == 200
+
+
 def test_core_pages_and_exports(tmp_path):
     app = create_app()
     app.config.update(

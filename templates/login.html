@@ -1,24 +1,154 @@
 {% extends "base.html" %}
+{% block body_class %}auth-body{% endblock %}
+{% block main_class %}auth-main{% endblock %}
 {% block content %}
-<section class="login-wrap">
-    <div class="login-panel shadow-sm">
-        <div class="mb-4">
-            <div class="brand-mark"><i class="bi bi-activity"></i></div>
-            <h1 class="h3 fw-bold mb-2">SkinSeasonAI</h1>
-            <p class="text-secondary mb-0">季节变化与皮肤病发病规律分析及可视化预测系统</p>
+<section class="auth-page">
+    <div class="auth-bg" aria-hidden="true">
+        <span class="auth-orb auth-orb-a"></span>
+        <span class="auth-orb auth-orb-b"></span>
+        <span class="auth-orb auth-orb-c"></span>
+        <span class="auth-grid"></span>
+    </div>
+
+    <div class="auth-shell">
+        <aside class="auth-hero">
+            <div class="auth-hero-inner">
+                <div class="auth-brand">
+                    <div class="auth-brand-mark"><i class="bi bi-activity"></i></div>
+                    <div>
+                        <strong>SkinSeasonAI</strong>
+                        <span>Intelligent Dermatology Analytics</span>
+                    </div>
+                </div>
+
+                <h2 class="auth-hero-title">季节变化与皮肤病<br>发病规律智能分析平台</h2>
+                <p class="auth-hero-desc">
+                    融合气象数据、季节趋势与机器学习预测，为科研与教学提供可视化决策支持。
+                </p>
+
+                <ul class="auth-feature-list">
+                    <li><i class="bi bi-cloud-sun"></i><span>气象关联与季节对比分析</span></li>
+                    <li><i class="bi bi-graph-up-arrow"></i><span>多模型发病率预测与评估</span></li>
+                    <li><i class="bi bi-camera"></i><span>皮肤图像辅助识别演示</span></li>
+                </ul>
+
+                <div class="auth-stats">
+                    <div class="auth-stat">
+                        <strong>6+</strong>
+                        <span>可视化图表</span>
+                    </div>
+                    <div class="auth-stat">
+                        <strong>4</strong>
+                        <span>机器学习模型</span>
+                    </div>
+                    <div class="auth-stat">
+                        <strong>24/7</strong>
+                        <span>本地数据安全</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <div class="auth-card glass-panel">
+            <div class="auth-card-head">
+                <div class="auth-tabs" role="tablist" data-active="{% if auth_mode == 'register' %}register{% else %}login{% endif %}">
+                    <button type="button" class="auth-tab {% if auth_mode != 'register' %}active{% endif %}" data-auth-tab="login" role="tab" aria-selected="{% if auth_mode != 'register' %}true{% else %}false{% endif %}">
+                        登录
+                    </button>
+                    <button type="button" class="auth-tab {% if auth_mode == 'register' %}active{% endif %}" data-auth-tab="register" role="tab" aria-selected="{% if auth_mode == 'register' %}true{% else %}false{% endif %}">
+                        注册
+                    </button>
+                    <span class="auth-tab-indicator"></span>
+                </div>
+                <button class="btn btn-outline-secondary btn-sm icon-btn auth-theme-toggle" id="themeToggle" type="button" title="切换暗色模式">
+                    <i class="bi bi-moon-stars"></i>
+                </button>
+            </div>
+
+            <div class="auth-panels">
+                <div class="auth-panel {% if auth_mode != 'register' %}active{% endif %}" data-auth-panel="login">
+                    <div class="auth-panel-intro">
+                        <h1 class="auth-title">欢迎回来</h1>
+                        <p class="auth-subtitle">登录以访问数据分析、预测与可视化大屏</p>
+                    </div>
+                    <form class="auth-form" method="post" action="{{ url_for('main.login') }}">
+                        <div class="auth-field">
+                            <label class="form-label" for="login-username">用户名</label>
+                            <div class="auth-input-wrap">
+                                <i class="bi bi-person"></i>
+                                <input class="form-control" id="login-username" name="username" placeholder="请输入用户名" autocomplete="username" required>
+                            </div>
+                        </div>
+                        <div class="auth-field">
+                            <label class="form-label" for="login-password">密码</label>
+                            <div class="auth-input-wrap">
+                                <i class="bi bi-shield-lock"></i>
+                                <input class="form-control auth-password-input" id="login-password" name="password" type="password" placeholder="请输入密码" autocomplete="current-password" required>
+                                <button class="auth-password-toggle" type="button" aria-label="显示密码" data-password-toggle>
+                                    <i class="bi bi-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary auth-submit w-100" type="submit">
+                            <span>登录系统</span>
+                            <i class="bi bi-arrow-right-short"></i>
+                        </button>
+                    </form>
+                    <p class="auth-switch-hint">
+                        还没有账号？
+                        <button type="button" class="auth-link-btn" data-auth-tab="register">立即注册</button>
+                    </p>
+                </div>
+
+                <div class="auth-panel {% if auth_mode == 'register' %}active{% endif %}" data-auth-panel="register">
+                    <div class="auth-panel-intro">
+                        <h1 class="auth-title">创建账号</h1>
+                        <p class="auth-subtitle">注册后即可使用完整的数据分析与预测功能</p>
+                    </div>
+                    <form class="auth-form" method="post" action="{{ url_for('main.register') }}">
+                        <div class="auth-field">
+                            <label class="form-label" for="register-username">用户名</label>
+                            <div class="auth-input-wrap">
+                                <i class="bi bi-person-plus"></i>
+                                <input class="form-control" id="register-username" name="username" placeholder="3-32 个字符" autocomplete="username" minlength="3" maxlength="32" required>
+                            </div>
+                        </div>
+                        <div class="auth-field">
+                            <label class="form-label" for="register-password">密码</label>
+                            <div class="auth-input-wrap">
+                                <i class="bi bi-key"></i>
+                                <input class="form-control auth-password-input" id="register-password" name="password" type="password" placeholder="至少 6 位字符" autocomplete="new-password" minlength="6" required>
+                                <button class="auth-password-toggle" type="button" aria-label="显示密码" data-password-toggle>
+                                    <i class="bi bi-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="auth-field">
+                            <label class="form-label" for="register-confirm">确认密码</label>
+                            <div class="auth-input-wrap">
+                                <i class="bi bi-check2-circle"></i>
+                                <input class="form-control auth-password-input" id="register-confirm" name="confirm_password" type="password" placeholder="再次输入密码" autocomplete="new-password" minlength="6" required>
+                                <button class="auth-password-toggle" type="button" aria-label="显示密码" data-password-toggle>
+                                    <i class="bi bi-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary auth-submit w-100" type="submit">
+                            <span>创建账号</span>
+                            <i class="bi bi-person-check"></i>
+                        </button>
+                    </form>
+                    <p class="auth-switch-hint">
+                        已有账号？
+                        <button type="button" class="auth-link-btn" data-auth-tab="login">返回登录</button>
+                    </p>
+                </div>
+            </div>
+
+            <div class="auth-card-foot">
+                <span><i class="bi bi-shield-check"></i> 本地 SQLite 存储 · 演示账号 admin / admin123</span>
+            </div>
         </div>
-        <form method="post">
-            <div class="mb-3">
-                <label class="form-label">用户名</label>
-                <input class="form-control" name="username" value="admin" required>
-            </div>
-            <div class="mb-4">
-                <label class="form-label">密码</label>
-                <input class="form-control" name="password" type="password" value="admin123" required>
-            </div>
-            <button class="btn btn-primary w-100" type="submit"><i class="bi bi-box-arrow-in-right"></i> 登录系统</button>
-        </form>
     </div>
 </section>
 {% endblock %}
-
