@@ -9,10 +9,10 @@
 </div>
 
 <div class="metric-grid">
-    <div class="metric"><span>总记录数</span><strong>{{ summary.rows or 0 }}</strong></div>
-    <div class="metric"><span>疾病类别</span><strong>{{ summary.disease_count or 0 }}</strong></div>
-    <div class="metric"><span>总发病量</span><strong>{{ "%.0f"|format(summary.total_incidence or 0) }}</strong></div>
-    <div class="metric"><span>平均发病量</span><strong>{{ "%.2f"|format(summary.avg_incidence or 0) }}</strong></div>
+    <div class="metric"><div class="metric-icon"><i class="bi bi-table"></i></div><span>总记录数</span><strong>{{ summary.rows or 0 }}</strong></div>
+    <div class="metric"><div class="metric-icon"><i class="bi bi-clipboard2-pulse"></i></div><span>疾病类别</span><strong>{{ summary.disease_count or 0 }}</strong></div>
+    <div class="metric"><div class="metric-icon"><i class="bi bi-graph-up-arrow"></i></div><span>总发病量</span><strong>{{ "%.0f"|format(summary.total_incidence or 0) }}</strong></div>
+    <div class="metric"><div class="metric-icon"><i class="bi bi-speedometer2"></i></div><span>平均发病量</span><strong>{{ "%.2f"|format(summary.avg_incidence or 0) }}</strong></div>
 </div>
 
 <div class="row g-3 mt-1">
@@ -62,4 +62,3 @@ renderChart("home-line", {{ charts.line|safe }});
 renderChart("home-pie", {{ charts.pie|safe }});
 </script>
 {% endblock %}
-

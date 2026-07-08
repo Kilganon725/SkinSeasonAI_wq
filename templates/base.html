@@ -13,23 +13,24 @@
 <nav class="navbar navbar-expand-lg border-bottom sticky-top bg-body">
     <div class="container-fluid">
         <a class="navbar-brand fw-bold" href="{{ url_for('main.home') }}">
-            <i class="bi bi-activity"></i> SkinSeasonAI
+            <span class="brand-symbol"><i class="bi bi-activity"></i></span>
+            <span>SkinSeasonAI</span>
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div id="nav" class="collapse navbar-collapse">
             <ul class="navbar-nav me-auto">
-                <li class="nav-item"><a class="nav-link" href="{{ url_for('main.dataset_management') }}">数据管理</a></li>
-                <li class="nav-item"><a class="nav-link" href="{{ url_for('main.weather_analysis') }}">气象分析</a></li>
-                <li class="nav-item"><a class="nav-link" href="{{ url_for('main.season_analysis') }}">季节分析</a></li>
-                <li class="nav-item"><a class="nav-link" href="{{ url_for('main.disease_analysis') }}">疾病分析</a></li>
-                <li class="nav-item"><a class="nav-link" href="{{ url_for('main.image_diagnosis') }}">图像识别</a></li>
-                <li class="nav-item"><a class="nav-link" href="{{ url_for('main.prediction') }}">机器学习预测</a></li>
-                <li class="nav-item"><a class="nav-link" href="{{ url_for('main.dashboard') }}">可视化大屏</a></li>
-                <li class="nav-item"><a class="nav-link" href="{{ url_for('main.about') }}">关于</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('main.dataset_management') }}"><i class="bi bi-database"></i> 数据管理</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('main.weather_analysis') }}"><i class="bi bi-cloud-sun"></i> 气象分析</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('main.season_analysis') }}"><i class="bi bi-calendar3"></i> 季节分析</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('main.disease_analysis') }}"><i class="bi bi-clipboard2-pulse"></i> 疾病分析</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('main.image_diagnosis') }}"><i class="bi bi-image"></i> 图像识别</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('main.prediction') }}"><i class="bi bi-cpu"></i> 预测</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('main.dashboard') }}"><i class="bi bi-grid-1x2"></i> 大屏</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('main.about') }}"><i class="bi bi-info-circle"></i> 关于</a></li>
             </ul>
-            <div class="d-flex align-items-center gap-2">
+            <div class="nav-actions d-flex align-items-center gap-2">
                 <button class="btn btn-outline-secondary btn-sm icon-btn" id="themeToggle" title="切换暗色模式">
                     <i class="bi bi-moon-stars"></i>
                 </button>
